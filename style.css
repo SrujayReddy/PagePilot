@@ -1,0 +1,29 @@
+#header-box {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 300px;
+  height: 100vh;
+  overflow-y: auto;
+  background: #f9f9f9;
+  border-right: 1px solid #ccc;
+  padding: 15px;
+  font-family: sans-serif;
+  font-size: 14px;
+  z-index: 9999;
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
+}
+
+.header-box-title {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.header-box-item {
+  white-space: pre-wrap;
+}
+
+#content-wrapper {
+  margin-left: 320px; /* width of sidebar + padding */
+  padding: 15px;
+}
