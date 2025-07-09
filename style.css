@@ -2,7 +2,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 300px;
+  width: 200px;
   height: 100vh;
   overflow-y: auto;
   background: #f9f9f9;
@@ -24,6 +24,6 @@
 }
 
 #content-wrapper {
-  margin-left: 320px; /* width of sidebar + padding */
+  margin-left: 220px; /* width of sidebar + padding */
   padding: 15px;
 }

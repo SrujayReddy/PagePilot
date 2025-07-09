@@ -1,21 +1,21 @@
 // Extract main visible text from the page
 function extractTextContent() {
-  return document.body.innerText.slice(0, 4000); // limit to avoid API max length
+  return document.body.innerText.slice(0, 16000); // limit to avoid API max length
 }
 
-// Send message to background to get Gemini title
+// Send message to background to get Gemini ToC
 chrome.runtime.sendMessage(
-  { action: "generateTitle", content: extractTextContent() },
+  { action: "generateToC", content: extractTextContent() },
   function (response) {
-    // Fallback title if none received
-    const title = response?.title || "⚠️ No title received.";
+    // Fallback ToC if none received
+    const toc = response?.toc || "No ToC received.";
 
     // Create Gemini sidebar box
     const box = document.createElement("div");
     box.id = "header-box";
     box.innerHTML = `
       <div class="header-box-title">Gemini TOC:</div>
-      <div class="header-box-item">${title}</div>
+      <div class="header-box-item">${toc}</div>
     `;
 
     // Create wrapper and move all existing content into it

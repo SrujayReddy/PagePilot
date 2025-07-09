@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Gemini Page Title Generator",
+  "name": "Gemini Page ToC Generator",
   "version": "1.0",
-  "description": "Uses Gemini to suggest a better title for the page.",
+  "description": "Uses Gemini to create a ToC for a page.",
   "permissions": ["scripting", "activeTab"],
   "host_permissions": ["<all_urls>"],
   "background": {
