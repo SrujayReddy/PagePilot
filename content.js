@@ -35,26 +35,55 @@ chrome.runtime.sendMessage({ action: "findHeaders", content: allText }, function
   tocBox.innerHTML = `<div class="toc-title">Table of Contents</div>`;
   const list = document.createElement("ul");
 
-  // Step 1: Wrap original page content to shift it
-  const wrapper = document.createElement("div");
-  wrapper.id = "content-wrapper";
+  // Style and inject sidebar without re-writing the whole body to avoid CSP issues
+const sidebarWidth = 260;
+  tocBox.style.position = "fixed";
+  tocBox.style.top = "0";
+tocBox.style.left = "0";
+  tocBox.style.width = sidebarWidth + "px";
+  tocBox.style.height = "100vh";
+  tocBox.style.overflowY = "auto";
+tocBox.style.background = "#ffffff";
+  tocBox.style.borderLeft = "1px solid #e5e5e5";
+  tocBox.style.padding = "1rem";
+  tocBox.style.zIndex = "9999";
 
-  const children = Array.from(document.body.childNodes);
-  children.forEach(child => {
-    if (child !== tocBox) wrapper.appendChild(child);
-  });
+  // Give the main page a right-hand margin so content isn't hidden under the sidebar
+const currentMarginLeft = parseFloat(getComputedStyle(document.body).marginLeft) || 0;
+  document.body.style.marginLeft = currentMarginLeft + sidebarWidth + 20 + "px";
 
-  // Clear body and re-add everything
-  document.body.innerHTML = "";
+  // Basic styles for list + highlight
+  const styleEl = document.createElement("style");
+  styleEl.textContent = `
+    #toc-box .toc-title { font-weight: 600; margin-bottom: 0.5rem; font-family: sans-serif; }
+    #toc-box ul { list-style: none; padding: 0; margin: 0; }
+    #toc-box .toc-item { cursor: pointer; color: #0366d6; margin: 0.25rem 0; font-family: sans-serif; }
+    #toc-box .toc-item:hover { text-decoration: underline; }
+    .gemini-header-highlight { background: #ffff99; transition: background 0.3s ease; }
+    #scroll-progress {position: fixed; top:0; left:0; height:4px; background:#4caf50; width:0%; z-index:10000;}
+    body {font-family: "Georgia", "Times New Roman", serif; line-height:1.6; color:#111; background:#fbfbfb;}
+    mark.pagepilot-highlight{background-color:#fffb8f; font-weight:bold;}
+  `;
+document.head.appendChild(styleEl);
+
+  // Finally add the sidebar to the page
   document.body.appendChild(tocBox);
-  document.body.appendChild(wrapper);
 
   headers.forEach(headerText => {
   let bestMatch = null;
   let bestScore = -Infinity;
 
-  textBlocks.forEach(block => {
+textBlocks.forEach(block => {
     const blockText = block.text.toLowerCase().trim();
+
+    // Simple keyword highlighting for important phrases
+    const highlightKeywords = ["important", "note", "warning", "key idea", "summary"];
+    highlightKeywords.forEach(k=> {
+      const re = new RegExp(`\\b${k}\\b`, "i");
+      if(re.test(blockText)) {
+        block.node.innerHTML = block.node.innerHTML.replace(re, `<mark class="pagepilot-highlight">$&</mark>`);
+      }
+    });
     const header = headerText.toLowerCase().trim();
 
     let score = 0;
@@ -95,6 +124,19 @@ chrome.runtime.sendMessage({ action: "findHeaders", content: allText }, function
   }
   });
 
-  tocBox.appendChild(list);
-  document.body.appendChild(tocBox);
+tocBox.appendChild(list);
+
+// Scroll progress bar
+const progress = document.createElement("div");
+progress.id = "scroll-progress";
+document.body.appendChild(progress);
+function updateProgress() {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const scrolled = (scrollTop / docHeight) * 100;
+  progress.style.width = scrolled + "%";
+}
+window.addEventListener("scroll", updateProgress);
+updateProgress();
 });
+
