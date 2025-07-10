@@ -1,11 +1,11 @@
-#header-box {
+#toc-box {
   position: fixed;
   top: 0;
   left: 0;
   width: 200px;
   height: 100vh;
   overflow-y: auto;
-  background: #f9f9f9;
+  background: #f0f0f0;
   border-right: 1px solid #ccc;
   padding: 15px;
   font-family: sans-serif;
@@ -14,16 +14,29 @@
   box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
 }
 
-.header-box-title {
+.toc-title {
   font-weight: bold;
-  margin-bottom: 8px;
+  font-size: 16px;
+  margin-bottom: 10px;
 }
 
-.header-box-item {
-  white-space: pre-wrap;
+.toc-item {
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.toc-item:hover {
+  text-decoration: underline;
+}
+
+.gemini-header-highlight {
+  background-color: #fff6b0;
+  border-left: 4px solid #ffc107;
+  padding-left: 6px;
+  font-weight: bold;
 }
 
 #content-wrapper {
-  margin-left: 220px; /* width of sidebar + padding */
+  margin-left: 220px; /* width of sidebar + spacing */
   padding: 15px;
 }
